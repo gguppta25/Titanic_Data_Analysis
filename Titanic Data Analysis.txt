@@ -1,0 +1,34 @@
+Titanic Data Analysis
+
+
+REGISTER /home/acadgild/pig/piggybank.jar ;
+
+titanic = LOAD 'TitanicData.txt' USING org.apache.pig.piggybank.storage.CSVExcelStorage()
+AS (PassengerId: int, Survived: int,Pclass: int,Name: chararray,Sex: chararray,Age: int,SibSp: int,Parch: int,
+    Ticket: chararray,Fare: int,Cabin: chararray, Embarked: chararray ) ;
+	
+dump titanic ;
+
+Problem Statement 
+
+
+1.In this problem statement we will find the average fare of each class.
+
+ grunt> grp_class = GROUP titanic BY Pclass;
+ grunt> avg_fare = FOREACH grp_class GENERATE titanic.Pclass , AVG(titanic.Fare);
+ grunt> dump avg_fare ;
+
+ 
+ 
+
+2.In this problem statement we will find the number of people alive in each class and
+are embarked in Southampton.
+
+grunt> alive_s = FILTER titanic BY Survived == 1 AND Embarked == 'S';
+grunt> grp_alive_s = GROUP  alive_s BY Pclass;
+grunt> count_alive_s = FOREACH grp_alive_s GENERATE  alive_s.Pclass , COUNT( alive_s.Pclass);
+grunt> dump count_alive_s;
+
+
+3.In this problem statement we will find out number of male and female people died in
+each class.
